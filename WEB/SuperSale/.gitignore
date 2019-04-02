@@ -1,6 +1,8 @@
 ###################
 # compiled source #
 ###################
+!
+*.gitignore
 *.com
 *.class
 *.dll
@@ -22,6 +24,7 @@ _UpgradeReport_Files/
 ###############
 # Directories #
 ###############
+.vs/*
 bin/
 obj/
 TestResults/

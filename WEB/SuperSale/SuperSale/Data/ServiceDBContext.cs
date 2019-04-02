@@ -1,8 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using SuperSale.Models;
 
-namespace SuperSale.Models
+namespace SuperSale.Data
 {
     public partial class ServiceDBContext : DbContext
     {
@@ -215,9 +216,6 @@ namespace SuperSale.Models
 
                 entity.Property(e => e.RecipeId).HasColumnName("RecipeID");
 
-                entity.Property(e => e.PartId).HasColumnName("PartID");
-
-                entity.Property(e => e.ServicePackId).HasColumnName("ServicePackID");
             });
 
             modelBuilder.Entity<ServicePacks>(entity =>
