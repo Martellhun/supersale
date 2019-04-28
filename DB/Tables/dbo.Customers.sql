@@ -1,9 +1,9 @@
 CREATE TABLE [dbo].[Customers]
 (
-[CustomerID] [bigint] NOT NULL,
-[FirstName] [varchar] (20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-[LastName] [varchar] (20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
-[Company] [varchar] (30) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+[CustomerID] [bigint] NOT NULL IDENTITY(1, 1),
+[FirstName] [nvarchar] (20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+[LastName] [nvarchar] (20) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
+[Company] [nvarchar] (30) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 [Email] [varchar] (50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL
 ) ON [PRIMARY]
 GO

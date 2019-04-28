@@ -1,7 +1,7 @@
 CREATE TABLE [dbo].[WarrantyTypes]
 (
-[ServicePackTypeID] [int] NULL,
-[AssocietadPartType] [int] NULL,
+[ServicePackTypeID] [bigint] NULL,
+[AssociatedPartType] [tinyint] NULL,
 [LengthInYears] [int] NULL
 ) ON [PRIMARY]
 GO

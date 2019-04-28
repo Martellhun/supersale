@@ -24,16 +24,17 @@ BEGIN
 	INSERT INTO dbo.Orders (CustomerID, SoldBy, TotalPrice, RecordedAt)
 	SELECT @CustomerID, @UserID, @TotalPrice, @now
 
-	SET @OrderNumber = SCOPE_IDENTITY()
+	SET @OrderNumber = SCOPE_IDENTITY() 
 
-	INSERT INTO dbo.Orderitems (OrderID, PartID, Quantity)
-	SELECT @OrderNumber, p.PartID, p.Quantity
+	INSERT INTO dbo.OrderItems (OrderID, PartID, Quantity, NetPrice, Tax)
+	SELECT @OrderNumber, p.PartID, p.Quantity, p2.Price, (p2.Price * 0.27) -- Dont do this
 	FROM @Parts p
+	INNER JOIN dbo.Parts AS p2 ON p2.PartID = p.PartID
 
 	IF EXISTS (SELECT 1 FROM dbo.WarrantyTypes wt WHERE wt.ServicePackTypeID = @ServicePackType)
 	BEGIN
 		INSERT INTO dbo.Warranties (CarID, CustomerID, PartTypeID, StartDate, EndDate, Status)
-		SELECT @CarID, @CustomerID, AssocietadPartType, @now, DATEADD(yy, wt.LengthInYears, @now), 1 -- active
+		SELECT @CarID, @CustomerID, AssociatedPartType, @now, DATEADD(yy, wt.LengthInYears, @now), 1 -- active
 		FROM dbo.WarrantyTypes wt
 		WHERE wt.ServicePackTypeID = @ServicePackType
 	END

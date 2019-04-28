@@ -1,8 +1,9 @@
 CREATE TABLE [dbo].[Warranties]
 (
 [WarrantyID] [bigint] NOT NULL IDENTITY(1, 1),
+[OrderItemID] [bigint] NOT NULL,
 [CustomerID] [bigint] NOT NULL,
-[CarID] [bigint] NOT NULL,
+[CustomerCarID] [bigint] NOT NULL,
 [PartTypeID] [int] NOT NULL,
 [StartDate] [datetime] NOT NULL,
 [EndDate] [datetime] NOT NULL,

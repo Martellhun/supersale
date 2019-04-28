@@ -1,10 +1,9 @@
 CREATE TABLE [dbo].[CarParts]
 (
-[ConnectionID] [bigint] NOT NULL IDENTITY(1, 1),
 [CarID] [bigint] NOT NULL,
 [PartID] [bigint] NOT NULL,
-[TypeID] [tinyint] NULL
+[PartTypeID] [tinyint] NULL
 ) ON [PRIMARY]
 GO
-ALTER TABLE [dbo].[CarParts] ADD CONSTRAINT [PK_CarParts_ConnectionID] PRIMARY KEY CLUSTERED  ([ConnectionID]) ON [PRIMARY]
+CREATE NONCLUSTERED INDEX [ix_Carparts_CarID_TypeID] ON [dbo].[CarParts] ([CarID], [PartTypeID]) ON [PRIMARY]
 GO
