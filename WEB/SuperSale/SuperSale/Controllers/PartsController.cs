@@ -41,9 +41,9 @@ namespace SuperSale.Controllers
         // POST: Parts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(IFormCollection partCollection)
-        {
-           /* try
+        public ActionResult Create(IFormCollection partCollection)
+        {/*
+            try
             {
                 var part = new PartInputModel
                 {
@@ -58,10 +58,10 @@ namespace SuperSale.Controllers
                 await _dbQueryExecutor.ExecuteNonQueryAsync(SPNames.NewCar, spParams);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch */
             {
                 return View();
-            }*/
+            }
         }
 
         // GET: Parts/Edit/5

@@ -11,7 +11,8 @@ function deleteItem (id) {
     event.preventDefault();
     $.ajax({
        url: "/Cars/Delete/" + id,
-       type: 'delete'
+        type: 'delete',
+        success: function () { location.reload() }
     });
 }
 </script>
@@ -22,9 +23,6 @@ function deleteItem (id) {
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.CarId)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Brand)
             </th>
@@ -45,9 +43,6 @@ function deleteItem (id) {
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CarId)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.Brand)
                 </td>
                 <td>
@@ -60,7 +55,7 @@ function deleteItem (id) {
                     @Html.DisplayFor(modelItem => item.Engine)
                 </td>
                 <td>
-                    <a class="deleteButton" onclick="deleteItem(@item.CarId)">Delete</a>
+                    <a class="deleteButton" style="cursor:pointer" onclick="deleteItem(@item.CarId)">Delete</a>
                 </td>
             </tr>
         }

@@ -65,15 +65,13 @@ namespace SuperSale.Controllers
 
         // POST: Cars/Delete/5
         [HttpDelete]
-        [Route("Cars/Delete/{id}")]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete([FromQuery]long id)
+        public async Task<ActionResult> Delete(long id)
         {
             try
             {
                 var qParams = _dbQueryExecutor.GenerateDynamicParameters(new CarIdParams { CarId = id});
 
-                await _dbQueryExecutor.ExecuteNonQueryAsync(CarQueries.DeleteCar, qParams);
+                await _dbQueryExecutor.ExecuteNonQueryAsync(CarQueries.DeleteCar, qParams, System.Data.CommandType.Text);
 
                 return RedirectToAction(nameof(Index));
             }
