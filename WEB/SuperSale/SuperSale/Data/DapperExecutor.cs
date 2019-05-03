@@ -29,8 +29,6 @@ namespace SuperSale.Data
         {
             using (var conn = new SqlConnection(_connString))
             {
-                var sw = Stopwatch.StartNew();
-
                 await conn.ExecuteAsync(sql, parameters, commandType: commandType, commandTimeout: commandTimeout);
                               
                 return GetReturnCode(parameters);
@@ -114,6 +112,24 @@ namespace SuperSale.Data
             return (parameters?.ParameterNames.Contains(ReturnCode) == true)
                 ? parameters.Get<int>(ReturnCode)
                 : 0;
+        }
+
+        public DynamicParameters GenerateDynamicParameters<T>(object obj)
+        {
+            var spParams = new DynamicParameters();
+
+            var type = typeof(T);
+
+            foreach (var propInfo in type.GetProperties())
+            {
+                var value = propInfo.GetValue(obj);
+
+                spParams.Add(
+                    propInfo.Name,
+                    value);
+            }
+
+            return spParams;
         }
     }
 }

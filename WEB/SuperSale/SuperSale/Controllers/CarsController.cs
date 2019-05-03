@@ -38,11 +38,20 @@ namespace SuperSale.Controllers
         // POST: Cars/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([FromBody]CarInputModel car)
+        public async Task<ActionResult> Create(IFormCollection carCollection)
         {
             try
             {
-                await _dbQueryExecutor.ExecuteNonQueryAsync(SPNames.NewCar, car);
+                var car = new CarInputModel {
+                    BrandName = carCollection[nameof(Car.Brand)],
+                    Typename = carCollection[nameof(Car.Type)],
+                    Engine = int.Parse(carCollection[nameof(Car.Engine)]),
+                    Generation = int.Parse(carCollection[nameof(Car.Gen)])
+                };
+
+                var spParams = _dbQueryExecutor.GenerateDynamicParameters<CarInputModel>(car);
+
+                await _dbQueryExecutor.ExecuteNonQueryAsync(SPNames.NewCar, spParams);
                 return RedirectToAction(nameof(Index));
             }
             catch

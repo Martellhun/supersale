@@ -8,7 +8,7 @@ namespace SuperSale.Data
     public class SPNames
     {
         public const string GetCars = "getCars";
-        public const string NewCar = "netCar";
+        public const string NewCar = "newCar";
 
     }
 }

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace SuperSale.Models.Input
+﻿namespace SuperSale.Models.Input
 {
     public class CarInputModel
     {
-        public string BrandName;
-        public string Typename;
-        public int Generation;
-        public int Engine;
+        public string BrandName { get; set; }
+        public string Typename { get; set; }
+        public int Generation { get; set; }
+        public int Engine { get; set; }
     }
 }
