@@ -10,8 +10,8 @@ GO
 CREATE PROCEDURE [dbo].[RecordOrder]
 	@UserID BIGINT,
 	@CustomerID BIGINT,
-	@CarID BIGINT,
-	@ServicePackType INT,
+	@CustomerCarID BIGINT,
+	@ServicePackID BIGINT,
 	@Parts PartList READONLY,
 	@TotalPrice DECIMAL(13,2)
 AS
@@ -20,6 +20,13 @@ BEGIN
 
 	DECLARE @now DATETIME = GETUTCDATE()
 		   ,@OrderNumber BIGINT
+
+/*	INSERT INTO @Parts (PartID, Quantity)
+	SELECT r.PartID, r.Quantity
+	FROM dbo.Recipes AS r
+	WHERE r.ServicePackID = @ServicePackID */
+
+	IF NOT EXISTS (SELECT 1 FROM @Parts AS p) RETURN 1
 
 	INSERT INTO dbo.Orders (CustomerID, SoldBy, TotalPrice, RecordedAt)
 	SELECT @CustomerID, @UserID, @TotalPrice, @now
@@ -31,12 +38,12 @@ BEGIN
 	FROM @Parts p
 	INNER JOIN dbo.Parts AS p2 ON p2.PartID = p.PartID
 
-	IF EXISTS (SELECT 1 FROM dbo.WarrantyTypes wt WHERE wt.ServicePackTypeID = @ServicePackType)
+	IF EXISTS (SELECT 1 FROM dbo.WarrantyTypes wt WHERE wt.ServicePackTypeID = @ServicePackID)
 	BEGIN
-		INSERT INTO dbo.Warranties (CarID, CustomerID, PartTypeID, StartDate, EndDate, Status)
-		SELECT @CarID, @CustomerID, AssociatedPartType, @now, DATEADD(yy, wt.LengthInYears, @now), 1 -- active
+		INSERT INTO dbo.Warranties (CustomerCarID, CustomerID, PartTypeID, StartDate, EndDate, Status)
+		SELECT @CustomerCarID, @CustomerID, AssociatedPartType, @now, DATEADD(yy, wt.LengthInYears, @now), 1 -- active
 		FROM dbo.WarrantyTypes wt
-		WHERE wt.ServicePackTypeID = @ServicePackType
+		WHERE wt.ServicePackTypeID = @ServicePackID
 	END
 
 	/*
