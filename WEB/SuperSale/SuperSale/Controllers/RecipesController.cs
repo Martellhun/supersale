@@ -6,28 +6,27 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SuperSale.Data;
-using SuperSale.Data.SQLQueries;
 using SuperSale.Models;
 
 namespace SuperSale.Controllers
 {
     public class RecipesController : Controller
     {
-        private readonly ServiceDBContext _context;
+        private readonly IDbQueryExecutor _dbQueryExecutor;
 
-        public RecipesController(ServiceDBContext context)
+        public RecipesController(IDbQueryExecutor dbQueryExecutor)
         {
-            _context = context;
+            _dbQueryExecutor = dbQueryExecutor;
         }
-
+        
         // GET: Recipes
         public async Task<IActionResult> Index()
         {
-            var recipes = _context.Recipes.FromSql(RecipeQueries.GetRecipes);
+            var recipes = await _dbQueryExecutor.ExecuteQueryAsync<Recipes>("", null);
 
-            return View(await recipes.ToListAsync());
+            return View(recipes.ToList());
         }
-
+        /*
         // GET: Recipes/Details/5
         public async Task<IActionResult> Details(long? id)
         {
@@ -151,6 +150,6 @@ namespace SuperSale.Controllers
         private bool RecipesExists(long id)
         {
             return _context.Recipes.Any(e => e.RecipeId == id);
-        }
+        } */
     }
 }
