@@ -5,46 +5,48 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SuperSale.Data;
-using SuperSale.Data.SQLQueries;
 using SuperSale.Models;
-using SuperSale.Models.Input;
-using static SuperSale.Data.SQLParams.CarParams;
 
 namespace SuperSale.Controllers
 {
-    public class CarsController : Controller
+    public class PartsController : Controller
     {
-
         private readonly IDbQueryExecutor _dbQueryExecutor;
 
-        public CarsController(IDbQueryExecutor dbQueryExecutor)
+        public PartsController(IDbQueryExecutor dbQueryExecutor)
         {
             _dbQueryExecutor = dbQueryExecutor;
         }
 
-        // GET: Cars
+        // GET: Parts
         public async Task<ActionResult> Index()
         {
-            var cars = await _dbQueryExecutor.ExecuteQueryAsync<Car>(SPNames.GetCars);
+            var parts = await _dbQueryExecutor.ExecuteQueryAsync<Part>(SPNames.GetParts);
 
-            return View(cars.ToList());
+            return View(parts.ToList());
         }
 
+        // GET: Parts/Details/5
+        public ActionResult Details(int id)
+        {
+            return View();
+        }
 
-        // GET: Cars/Create
+        // GET: Parts/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Cars/Create
+        // POST: Parts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(IFormCollection carCollection)
+        public async Task<ActionResult> Create(IFormCollection partCollection)
         {
-            try
+           /* try
             {
-                var car = new CarInputModel {
+                var part = new PartInputModel
+                {
                     BrandName = carCollection[nameof(Car.Brand)],
                     Typename = carCollection[nameof(Car.Type)],
                     Engine = int.Parse(carCollection[nameof(Car.Engine)]),
@@ -59,21 +61,46 @@ namespace SuperSale.Controllers
             catch
             {
                 return View();
-            }
+            }*/
         }
 
+        // GET: Parts/Edit/5
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
 
-        // POST: Cars/Delete/5
-        [HttpDelete]
-        [Route("Cars/Delete/{id}")]
+        // POST: Parts/Edit/5
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete([FromQuery]long id)
+        public ActionResult Edit(int id, IFormCollection collection)
         {
             try
             {
-                var qParams = _dbQueryExecutor.GenerateDynamicParameters(new CarIdParams { CarId = id});
+                // TODO: Add update logic here
 
-                await _dbQueryExecutor.ExecuteNonQueryAsync(CarQueries.DeleteCar, qParams);
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: Parts/Delete/5
+        public ActionResult Delete(int id)
+        {
+            return View();
+        }
+
+        // POST: Parts/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                // TODO: Add delete logic here
 
                 return RedirectToAction(nameof(Index));
             }

@@ -6,6 +6,16 @@
 
 <h2>Cars</h2>
 
+<script type="text/javascript">
+function deleteItem (id) {
+    event.preventDefault();
+    $.ajax({
+       url: "/Cars/Delete/" + id,
+       type: 'delete'
+    });
+}
+</script>
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -31,29 +41,28 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.CarId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Brand)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gen)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Engine)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CarId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Brand)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Gen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Engine)
+                </td>
+                <td>
+                    <a class="deleteButton" onclick="deleteItem(@item.CarId)">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

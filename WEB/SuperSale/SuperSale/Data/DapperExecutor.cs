@@ -114,11 +114,11 @@ namespace SuperSale.Data
                 : 0;
         }
 
-        public DynamicParameters GenerateDynamicParameters<T>(object obj)
+        public DynamicParameters GenerateDynamicParameters(object obj)
         {
             var spParams = new DynamicParameters();
 
-            var type = typeof(T);
+            var type = obj.GetType();
 
             foreach (var propInfo in type.GetProperties())
             {

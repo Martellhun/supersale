@@ -9,6 +9,7 @@ namespace SuperSale.Data
     {
         public const string GetCars = "getCars";
         public const string NewCar = "newCar";
+        public const string GetParts = "getParts";
 
     }
 }
