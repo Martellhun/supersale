@@ -12,3 +12,5 @@ CREATE TABLE [dbo].[Warranties]
 GO
 ALTER TABLE [dbo].[Warranties] ADD CONSTRAINT [PK_Warranties_WarrantyID] PRIMARY KEY CLUSTERED  ([WarrantyID]) ON [PRIMARY]
 GO
+CREATE NONCLUSTERED INDEX [IX_Warranties_CustomerID_Status] ON [dbo].[Warranties] ([CustomerID], [Status]) WHERE ([status]=(1)) ON [PRIMARY]
+GO
