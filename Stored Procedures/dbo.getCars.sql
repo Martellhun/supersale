@@ -14,14 +14,17 @@ SELECT c.CarID, b.Name AS Brand, t.Name AS Type, c.Generation AS Gen, c.Engine
 FROM dbo.Cars AS c
 INNER JOIN dbo.di_Brands AS b ON b.BrandID = c.BrandID
 INNER JOIN dbo.di_Types AS t ON t.BrandID=c.BrandID AND t.TypeID = c.TypeID
+ORDER BY b.Name, t.Name, c.GENERATION, c.Engine
 END
 
 ELSE 
+BEGIN
 SELECT c.CarID, b.Name AS Brand, t.Name AS Type, c.Generation AS Gen, c.Engine
 FROM dbo.Cars AS c
 INNER JOIN dbo.di_Brands AS b ON b.BrandID = c.BrandID
 INNER JOIN dbo.di_Types AS t ON t.BrandID=c.BrandID AND t.TypeID = c.TypeID
-WHERE (c.BrandID = @BrandID)
+WHERE (c.BrandID = @BrandID) 
+END
  
 
 RETURN 0

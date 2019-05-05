@@ -11,7 +11,7 @@ CREATE PROCEDURE [dbo].[RecordOrder]
 	@UserID BIGINT,
 	@CustomerID BIGINT,
 	@CustomerCarID BIGINT,
-	@ServicePackID BIGINT,
+	@ServicePackIDList IdList READONLY,
 	@Parts PartList READONLY,
 	@TotalPrice DECIMAL(13,2)
 AS
@@ -20,34 +20,59 @@ BEGIN
 
 	DECLARE @now DATETIME = GETUTCDATE()
 		   ,@OrderNumber BIGINT
+	
+	DECLARE @localParts AS TABLE (
+		PartID BIGINT,
+		Quantity INT,
+		ServicePackID BIGINT,
+		OrderItemID BIGINT	
+	) 
 
-/*	INSERT INTO @Parts (PartID, Quantity)
-	SELECT r.PartID, r.Quantity
+	DECLARE @ServicePacksAndOrderItems AS TABLE (
+		ServicePackID BIGINT,
+		OrderItemID BIGINT
+	)
+
+	INSERT INTO @localParts (PartID, Quantity, ServicePackID)
+	SELECT p.PartID, p.Quantity, NULL
+	FROM @Parts AS p
+
+	INSERT INTO @localParts (PartID, Quantity, ServicePackID)
+	SELECT r.PartID, r.Quantity, spil.ID
 	FROM dbo.Recipes AS r
-	WHERE r.ServicePackID = @ServicePackID */
+	INNER JOIN @ServicePackIDList AS spil ON spil.ID = r.ServicePackID
 
-	IF NOT EXISTS (SELECT 1 FROM @Parts AS p) RETURN 1
+	IF NOT EXISTS (SELECT 1 FROM @localParts AS p) RETURN 
 
 	INSERT INTO dbo.Orders (CustomerID, SoldBy, TotalPrice, RecordedAt)
 	SELECT @CustomerID, @UserID, @TotalPrice, @now
 
 	SET @OrderNumber = SCOPE_IDENTITY() 
 
-	INSERT INTO dbo.OrderItems (OrderID, PartID, Quantity, NetPrice, Tax)
-	SELECT @OrderNumber, p.PartID, p.Quantity, p2.Price, (p2.Price * 0.27) -- Dont do this
-	FROM @Parts p
+	MERGE dbo.OrderItems AS Target
+	USING (
+	SELECT @OrderNumber, p.PartID, p.Quantity, p2.Price, (p2.Price * 0.27), p.ServicePackID 
+	FROM @localParts AS p
 	INNER JOIN dbo.Parts AS p2 ON p2.PartID = p.PartID
+	) AS Source (OrderID, PartID, Quantity, Price, Tax, ServicePackID) ON (1 = 2)
+	WHEN NOT MATCHED THEN
+	INSERT (OrderID, PartID, Quantity, NetPrice, Tax)
+	VALUES (Source.OrderID, Source.PartID, Source.Quantity, Source.Price, Source.Tax)
+	OUTPUT Inserted.OrderItemID, Source.ServicePackID INTO @ServicePacksAndOrderItems;
 
-	IF EXISTS (SELECT 1 FROM dbo.WarrantyTypes wt WHERE wt.ServicePackTypeID = @ServicePackID)
+	IF EXISTS (SELECT 1 FROM dbo.WarrantyTypes wt INNER JOIN @ServicePackIDList AS spil ON spil.TypeID = wt.ServicePackTypeID)
 	BEGIN
-		INSERT INTO dbo.Warranties (CustomerCarID, CustomerID, PartTypeID, StartDate, EndDate, Status)
-		SELECT @CustomerCarID, @CustomerID, AssociatedPartType, @now, DATEADD(yy, wt.LengthInYears, @now), 1 -- active
+		INSERT INTO dbo.Warranties (CustomerCarID, OrderItemID, CustomerID, PartTypeID, StartDate, EndDate, Status)
+		OUTPUT Inserted.WarrantyID,Inserted.CustomerCarID, Inserted.OrderItemID, Inserted.CustomerID, Inserted.PartTypeID, Inserted.StartDate, Inserted.EndDate, Inserted.Status, @now
+		INTO dbo.WarrantyHistory (WarrantyID, CustomerCarID, OrderItemID, CustomerID, PartTypeID, StartDate, EndDate, Status, RecordedAt)
+		SELECT @CustomerCarID, spaoi.OrderItemID, @CustomerID, AssociatedPartType, @now, DATEADD(yy, wt.LengthInYears, @now), 1 -- active
 		FROM dbo.WarrantyTypes wt
-		WHERE wt.ServicePackTypeID = @ServicePackID
+		INNER JOIN @ServicePackIDList AS spil ON wt.ServicePackTypeID = spil.TypeID
+		INNER JOIN @ServicePacksAndOrderItems AS spaoi ON spaoi.ServicePackID = spil.ID		
 	END
 
 	/*
-	OR Try this one too, what happens when there are more than one warranties
+	OR Try this one too, what happens when there is no warranty, without if
 	INSERT INTO dbo.Warranties (CarID, CustomerID, PartTypeID, StartDate, EndDate, Status)
 	SELECT @CarID, @CustomerID, AssocietadPartType, @now, DATEADD(yy, wt.LengthInYears, @now), 1 -- active
 	FROM dbo.WarrantyTypes wt

@@ -2,10 +2,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 SET ANSI_NULLS ON
 GO
-CREATE PROCEDURE [dbo].[NewCar]
-@BrandName varchar(25),
+CREATE PROCEDURE [dbo].[newCar]
+@BrandName VARCHAR(25),
 @Typename VARCHAR(25),
-@Generation VARCHAR(5),
+@Generation INT,
 @Engine INT,
 @CarID BIGINT = NULL OUTPUT
 AS
@@ -40,4 +40,5 @@ BEGIN
 
 RETURN 0
 END
+
 GO
