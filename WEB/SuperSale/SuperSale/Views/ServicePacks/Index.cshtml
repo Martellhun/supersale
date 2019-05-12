@@ -1,0 +1,59 @@
+﻿@model IEnumerable<SuperSale.Models.ServicePack>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BrandName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CarTypeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ServiceTypeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Generation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Engine)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BrandName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CarTypeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServiceTypeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Generation)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Engine)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { id=item.ServicePackId  }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

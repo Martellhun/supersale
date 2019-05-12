@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SuperSale.Models
 {
-    public partial class Customers
+    public partial class CustomerModel
     {
         public long CustomerId { get; set; }
         public string FirstName { get; set; }

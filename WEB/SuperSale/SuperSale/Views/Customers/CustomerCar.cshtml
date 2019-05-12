@@ -1,0 +1,48 @@
+﻿@model SuperSale.Models.Car
+@using System.Linq
+@{
+        ViewData["Title"] = "CustomerCar";
+    var cars = ViewBag.Cars as IEnumerable<Car>;
+}
+
+<h2>CustomerCar</h2>
+
+
+
+<h4>Car</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CustomerCar">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Brand" class="control-label"></label>
+                @Html.DropDownListFor(m => m.Brand, new SelectList(cars.Select( c => c.Brand ).Distinct()))
+
+            </div>
+            <div class="form-group">
+                <label asp-for="Type" class="control-label"></label>
+                @Html.DropDownListFor(m => m.Type, new SelectList(cars.Select(c => c.Type).Distinct()))
+            </div>
+            <div class="form-group">
+                <label asp-for="Gen" class="control-label"></label>
+                @Html.DropDownListFor(m => m.Gen, new SelectList(cars.Select(c => c.Gen).Distinct()))
+            </div>
+            <div class="form-group">
+                <label asp-for="Engine" class="control-label"></label>
+                @Html.DropDownListFor(m => m.Engine, new SelectList(cars.Select(c => c.Engine).Distinct()))
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Search">Back to Search</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
