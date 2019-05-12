@@ -9,3 +9,5 @@ CREATE TABLE [dbo].[Customers]
 GO
 ALTER TABLE [dbo].[Customers] ADD CONSTRAINT [PK_Customers_CustomerID] PRIMARY KEY CLUSTERED  ([CustomerID]) ON [PRIMARY]
 GO
+CREATE NONCLUSTERED INDEX [IX_Customers_LastName_FirstName] ON [dbo].[Customers] ([LastName], [FirstName]) INCLUDE ([Company], [Email]) ON [PRIMARY]
+GO
