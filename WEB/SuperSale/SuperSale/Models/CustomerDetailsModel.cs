@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SuperSale.Models
 {
     public class CustomerDetailsModel
     {
 
-        public CustomerDetailsModel(CustomerModel customer, IEnumerable<Car> cars)
+        public CustomerDetailsModel(CustomerModel customer, IEnumerable<Car> cars, IEnumerable<Orders> orders, IEnumerable<Warranties> warranties)
         {
             this.CustomerId = customer.CustomerId;
             this.FirstName = customer.FirstName;
@@ -14,13 +15,22 @@ namespace SuperSale.Models
             this.Company = customer.Company;
             this.Email = customer.Email;
             this.CustomerCars = cars;
+            this.CustomerOrders = orders;
+            this.CustomerWarranties = warranties;
         }
 
+        [Display(Name = "Customer ID")]
         public long CustomerId { get; set; }
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
+        [Display(Name = "Company")]
         public string Company { get; set; }
+        [Display(Name = "Customer Email")]
         public string Email { get; set; }
         public IEnumerable<Car> CustomerCars { get; set; }
+        public IEnumerable<Orders> CustomerOrders { get; set; }
+        public IEnumerable<Warranties> CustomerWarranties { get; set; }
     }
 }

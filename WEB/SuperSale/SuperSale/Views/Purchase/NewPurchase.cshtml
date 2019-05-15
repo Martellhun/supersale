@@ -1,0 +1,126 @@
+﻿@model IEnumerable<SuperSale.Models.Product>
+
+@{
+    ViewData["Title"] = "NewPurchase";
+    var carId = (long)ViewBag.CarId;
+    var customerId = (long)ViewBag.CustomerId;
+
+}
+
+
+<h2>New Purchase</h2>
+
+<script>
+
+
+    function processPurchase() {
+        event.preventDefault();
+        $.ajax({
+            dataType: 'json',
+            contentType: "application/json",
+            url: "/Purchase/ProcessPurchase",
+            type: 'post',
+            data: stringifyTable(),
+            success: function () { window.location.href = "Customers/Details/"+@customerId }
+        });
+    }
+
+    function stringifyTable() {
+    var purchaseItems = [];
+    var headersText = [];
+    var $headers = $("th");
+
+    // Loop through grabbing everything
+    $("tbody tr").each(function (index) {
+        $cells = $(this).find("td");
+        purchaseItems[index] = {};
+
+        $cells.each(function (cellIndex) {
+            // Set the header text
+            if (headersText[cellIndex] === undefined) {
+                headersText[cellIndex] = $($headers[cellIndex])[0].innerText.trim();
+            }
+
+            var _this = $(this);
+            // Update the row object with the header/cell combo
+            purchaseItems[index][headersText[cellIndex]] = _this[0].innerText;
+
+            if (_this[0].innerHTML && _this[0].innerHTML.indexOf("checkbox") !== -1) {
+                purchaseItems[index][headersText[cellIndex]] = _this[0].children[0].checked;
+            } else if (_this[0].innerHTML && _this[0].innerHTML.indexOf("hidden") !== -1) {
+                purchaseItems[index][headersText[cellIndex]] = _this[0].children[0].value;
+            }
+        });
+    });
+
+    // Let's put this in the object like you want and convert to JSON (Note: jQuery will also do this for you on the Ajax request)
+    var purchaseModel = {
+        "carId": @carId,
+        "customerId": @customerId,
+        "purchaseItems": purchaseItems
+    };
+
+    return JSON.stringify(purchaseModel);
+}
+
+</script>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UM)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Selected)
+            </th>
+            <th style="display:none">
+                @Html.DisplayNameFor(model => model.ProductID)
+            </th>
+            <th style="display:none">
+                @Html.DisplayNameFor(model => model.ProductTypeID)
+            </th>
+            <th style="display:none">
+                @Html.DisplayNameFor(model => model.ProductType)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UM)
+            </td>
+            <td>
+                <input type="checkbox">
+            </td>
+            <td>
+                @Html.HiddenFor(modelItem => item.ProductID)
+            </td>
+            <td>
+                @Html.HiddenFor(modelItem => item.ProductTypeID)
+            </td>
+            <td>
+                @Html.HiddenFor(modelItem => item.ProductType)
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<div class="form-group">
+    <input type="button" value="Sell" class="btn btn-default" onclick="processPurchase()" />
+</div>
+

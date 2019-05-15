@@ -15,6 +15,9 @@ namespace SuperSale.Data
         public const string SearchCustomer = "searchCustomers";
         public const string GetRecipes = "getRecipes";
         public const string SetCustomer = "setCustomer";
+        public const string GetProducts = "getProducts";
+        public const string PurchaseProcess = "RecordOrder";
+        public const string GetOrders = "getCustomerOrders";
         internal static string GetCustomer = "getCustomer";
     }
 }

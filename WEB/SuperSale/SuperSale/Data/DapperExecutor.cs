@@ -106,7 +106,36 @@ namespace SuperSale.Data
             }
         }
 
-       
+        public async Task<(IEnumerable<T1>, IEnumerable<T2>, IEnumerable<T3>, IEnumerable<T4>)> ExecuteQueryFourSetsAsync<T1, T2, T3, T4>(string sql, DynamicParameters parameters, CommandType commandType = CommandType.StoredProcedure, int? commandTimeout = null)
+        {
+            using (var conn = new SqlConnection(_connString))
+            {
+                var sw = Stopwatch.StartNew();
+
+                IEnumerable<T1> resultSet1;
+                IEnumerable<T2> resultSet2;
+                IEnumerable<T3> resultSet3;
+                IEnumerable<T4> resultSet4;
+
+                using (var reader = await conn.QueryMultipleAsync(sql, parameters, commandType: commandType, commandTimeout: commandTimeout))
+                {
+                    resultSet1 = reader.IsConsumed ? Enumerable.Empty<T1>() : reader.Read<T1>();
+                    resultSet2 = reader.IsConsumed ? Enumerable.Empty<T2>() : reader.Read<T2>();
+                    resultSet3 = reader.IsConsumed ? Enumerable.Empty<T3>() : reader.Read<T3>();
+                    resultSet4 = reader.IsConsumed ? Enumerable.Empty<T4>() : reader.Read<T4>();
+
+                }
+
+                return (
+                    resultSet1,
+                    resultSet2,
+                    resultSet3,
+                    resultSet4
+                );
+            }
+        }
+
+
         private static int GetReturnCode(DynamicParameters parameters)
         {
             return (parameters?.ParameterNames.Contains(ReturnCode) == true)
@@ -123,7 +152,7 @@ namespace SuperSale.Data
             foreach (var propInfo in type.GetProperties())
             {
                 var value = propInfo.GetValue(obj);
-
+                
                 spParams.Add(
                     propInfo.Name,
                     value);

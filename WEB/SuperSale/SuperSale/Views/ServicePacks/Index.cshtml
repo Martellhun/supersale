@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Service Packages</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -19,13 +19,13 @@
                 @Html.DisplayNameFor(model => model.CarTypeName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ServiceTypeName)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Generation)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Engine)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ServiceTypeName)
             </th>
             <th></th>
         </tr>
@@ -40,17 +40,17 @@
                 @Html.DisplayFor(modelItem => item.CarTypeName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ServiceTypeName)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Generation)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Engine)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.ServiceTypeName)
+            </td>
+            <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { id=item.ServicePackId  }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ServicePackId }) |
                 @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
             </td>
         </tr>

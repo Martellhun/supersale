@@ -132,8 +132,8 @@ namespace SuperSale.Controllers
 
             spParams.Add("@CustomerID", id);
 
-            var (customer, cars) = await _dbQueryExecutor.ExecuteQueryTwoSetsAsync<CustomerModel, Car>(SPNames.GetCustomer, spParams);
-            return new CustomerDetailsModel(customer.Single(), cars);
+            var (customer, cars, orders, warranties) = await _dbQueryExecutor.ExecuteQueryFourSetsAsync<CustomerModel, Car, Orders, Warranties>(SPNames.GetCustomer, spParams);
+            return new CustomerDetailsModel(customer.Single(), cars, orders, warranties);
         }
     }
 }
